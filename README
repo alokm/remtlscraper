@@ -1,0 +1,8 @@
+remtlscraper.py is a command line utility for downloading and managing public
+pdf documents available from Ville de Montreal websites. The primary focus of
+this tool is to mine online public websites for information on land, water,
+and air contamination in the Montreal region. This is part of the open data project.
+
+Project Website: http://remtl.ca
+
+Project Sponsor: http://montrealouvert.net
