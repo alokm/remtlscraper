@@ -39,3 +39,7 @@ class BaseScraper(object):
         # To do: add mrc and contaminant updaters
         #   mrc = dict()
         #   contaminant = dict()
+
+if '__name__' == '__main__':
+    scraper = BaseScraper()
+    scraper.update_codes()
