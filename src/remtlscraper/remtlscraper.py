@@ -11,13 +11,15 @@ parser.add_argument('-g', action='store', metavar='MRC',
 parser.add_argument('-l', '--list', action='store_true', default=False,
                     dest='listflag',
                     help='list available MRC codes')
-parser.add_argument('--version', action='version', version='%(prog)s 1.0',
+parser.add_argument('-v', '--version', action='version', version='%(prog)s 1.0',
                     help='last updated 2011-12-23 by Alok Mohindra')
 
 results = parser.parse_args()
+"""
 print 'mrc_codes   =', results.mrc_code
 print 'list   =', results.listflag
 print '-' * 30
+"""
 
 if results.listflag == True:
     print 'show the list of mrc codes'
