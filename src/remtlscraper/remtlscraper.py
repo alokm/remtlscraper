@@ -2,7 +2,9 @@ import argparse
 
 parser = argparse.ArgumentParser()
 
-parser = argparse.ArgumentParser(description="Command line utility for downloading documentation on air, water, and soil contamination data from public websites")
+desc="Command line utility for downloading documentation on air, water, and soil contamination data from public websites")
+
+parser = argparse.ArgumentParser(description=desc)
 parser.add_argument('-g', '--get', action='store', metavar='NN',
                     dest='mrc_code', type=int, nargs ='+',
                     help='MRC code for region or municipality')
@@ -20,7 +22,6 @@ parser.add_argument('--version', action='version', version='%(prog)s 1.0',
                     help='last updated 2011-12-23 by Alok Mohindra')
 
 results = parser.parse_args()
-print "-" * 24
 print 'mrc_code   =', results.mrc_code
 print 'list   =', results.listflag
 print 'update   =', results.updateflag
