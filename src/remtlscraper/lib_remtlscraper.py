@@ -2,7 +2,6 @@
 
 from urllib import urlopen
 from BeautifulSoup import BeautifulSoup as soup
-#from lxml import etree
 
 
 class BaseScraper(object):
@@ -16,29 +15,27 @@ class BaseScraper(object):
         self.form = self.doc.body.find('form')
         self.table = self.form.find('table')
         self.rows = self.table.findAll('tr') 
-        self.muni = self.rows[3]
         self.mrc = self.rows[4]
         self.cont = self.rows[5]
 
     def update_codes(self):
         print "Retrieving Municipality Codes"
 
-        municipalite = dict()
+        self.mrc_code = dict()
         for item in self.muni.findAll('option'):
             if item.text == 'Tous':
                 print '-' * 40
-                print u'Code| Municipalite'
+                print u'Code| MRC'
                 print '-' * 40
             else:
-                municipalite[item.attrs[0][1]] = item.text
+                self.mrc_code[item.attrs[0][1]] = item.text
                 print item.attrs[0][1] + ' | ' + item.text
     
-        # next step: modify update_codes method to return munis
-        # as dict() with codes as keys and muni name as value
-        
-        # To do: add mrc and contaminant updaters
-        #   mrc = dict()
-        #   contaminant = dict()
+    def list_codes(self):
+        pass
+
+    def get_codes(self):
+        pass
 
 if '__name__' == '__main__':
     scraper = BaseScraper()
