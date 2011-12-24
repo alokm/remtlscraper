@@ -4,5 +4,20 @@ this tool is to mine online public websites for information on land, water,
 and air contamination in the Montreal region. This is part of the open data project.
 
 Project Website: http://remtl.ca
-
 Project Sponsor: http://montrealouvert.net
+
+Requirements:
+- python 2.4 or greater (2.7.x recommended)
+- libxml
+
+Basic Usage:
+
+from a command line enter the following
+> python remtlscraper.py -u  # to update the list of available MRC regions
+> python remtlscraper.py -l  # list available MRC codes 
+> python remtlscraper.py -h  # to display basic help 
+> python remtlscraper.py -g 01 02 03 # to retrieve all documents by code
+> python remtlscraper.py -d  ./path/to/dir # to specify an alternate download location
+> python remtlscraper.py -a  # to retrieve all documents for all codes (Warning)
+
+ 
