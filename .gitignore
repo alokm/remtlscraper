@@ -1,1 +1,3 @@
 *.pyc
+venv/
+raw_data/
