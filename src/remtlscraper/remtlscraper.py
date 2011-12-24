@@ -17,3 +17,13 @@ parser.add_argument('--version', action='version', version='%(prog)s 1.0',
 results = parser.parse_args()
 print 'mrc_codes   =', results.mrc_code
 print 'list   =', results.listflag
+print '-' * 30
+
+if results.listflag == True:
+    print 'show the list of mrc codes'
+elif results.mrc_code is not None:
+    print 'user specified the following codes:'
+    print results.mrc_code
+else:
+    print 'help what to do?'
+
