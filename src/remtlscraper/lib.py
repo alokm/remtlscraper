@@ -51,7 +51,8 @@ class BaseScraper(object):
         print 'retrieving data for: %s' % encoded
         req = urllib2.Request(_url, data=encoded, headers=headers)
         response = urllib2.urlopen(req)
-        self.region_page = response.read()
+        page = response.read()
+  	self.region_page = page.decode('iso-8859-1')
         return self.region_page
         print self.region_page
 
@@ -66,10 +67,11 @@ class BaseScraper(object):
         docsoup = soup(self.region_page)
         table = docsoup.body.findAll('table')
         data = table[4]
-        self.num_records = len(data.findAll('tr'))
-        coords = data.findAll('tr')[row+1].findAll('td')[1].text
-
+        raw_coords = data.findAll('tr')[row+1].findAll('td')[1].text
+        coords = raw_coords.replace(',','.').replace('&nbsp;','')
+        
         self.record = dict()
+        self.num_records = len(data.findAll('tr'))
         self.record['num_fiche'] = data.findAll('tr')[row+1].findAll('td')[0].text
         self.record['lat'] = coords[:coords.find('-')]
         self.record['long'] = coords[coords.find('-'):]      
@@ -79,7 +81,7 @@ class BaseScraper(object):
         self.record['eau_cont'] = data.findAll('tr')[row].findAll('td')[3].text
         self.record['sol_cont'] = data.findAll('tr')[row].findAll('td')[4].text
         self.record['etat_rehab'] = data.findAll('tr')[row].findAll('td')[5].text
-        parsed_row = [self.record['num_fiche'],
+        self.parsed_row = [self.record['num_fiche'],
                       self.record['lat'],
                       self.record['long'],
                       self.record['nom_dossier'],
@@ -87,25 +89,19 @@ class BaseScraper(object):
                       self.record['eau_cont'],
                       self.record['sol_cont'],
                       self.record['etat_rehab']]
-        return parsed_row
+        return self.parsed_row
         
         
     def walk_region_table(self):
-       print '%s records to process' % self.num_records 
-       for record in range(3, self.num_records, 2):
-           row = ','.join(self.parse_region_table(record)).encode('utf8')
-           savefile = open('savefile.csv', 'w')
+       print '%s records to process' % self.num_records
+       for record in range(3, self.num_records - 1, 2):
+           savefile = open('savefile.csv', 'a')
+           self.parse_region_table(record)
+           raw_row = ','.join(self.parsed_row) + '\n'
+           row = raw_row.encode('iso-8859-1').decode('ascii','ignore')
+           print type(row)
            savefile.write(row)
-           print row
+	   print "%s\n" % row
            print '%s of %s records processed' % (record, self.num_records) 
        savefile.close()
        print 'successfully processed %s records' % self.num_records
-
-    def save(self):
-        titles = u'Numéro de la fiche,Coordinées,Nature des Contaminants (Sol Souterraine)' + \
-        'État de la réhabilitation (R)\n Qualité des sols résiduels après réhabilitation (Q)'
-
-        self.savefile = open('savefile.html', 'w')
-        self.savefile.write(self.region_page)
-        self.savefile.close()
-        print 'wrote savefile'
