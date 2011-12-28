@@ -35,9 +35,21 @@ class BaseScraper(object):
                            "02" : u"Saguenay--Lac-Saint-Jean", }
  
 
+    def list(self):
+        help = 'list available region codes for scraping'
+       
+        print "Code | Region Name"
+        for region_code, region in sorted(self.region_codes.iteritems()):
+            print region_code, region
+
+
     def get_region(self, region_code):
+        help = 'get specified region code XX as two-digit string for scraper'
+    
         headers = { 'User-Agent' : self.user_agent }
         _url = self.url + self.post_url
+
+        self.filename = region_code + '_data.csv'
         
         values = dict()
         values['nom_dossier'] = ''
@@ -52,18 +64,12 @@ class BaseScraper(object):
         req = urllib2.Request(_url, data=encoded, headers=headers)
         response = urllib2.urlopen(req)
         page = response.read()
-  	self.region_page = page.decode('iso-8859-1')
+        self.region_page = page.decode('iso-8859-1')
+
         return self.region_page
-        print self.region_page
 
 
-    def list(self):
-        print "Code | MRC"
-        for region_code, region in sorted(self.region_codes.iteritems()):
-            print region_code, region
-
-
-    def parse_region_table(self, row):
+    def parse_region_table(self, row=3):
         docsoup = soup(self.region_page)
         table = docsoup.body.findAll('table')
         data = table[4]
@@ -76,7 +82,8 @@ class BaseScraper(object):
         self.record['lat'] = coords[:coords.find('-')]
         self.record['long'] = coords[coords.find('-'):]      
         self.record['nom_dossier'] = data.findAll('tr')[row].findAll('td')[0].text
-        self.record['adress'] = data.findAll('tr')[row].findAll('td')[1].text
+        raw_adress = data.findAll('tr')[row].findAll('td')[1].text
+        self.record['adress'] = raw_adress.replace(',',' ').replace('&nbsp;',' ')
         self.record['mrc'] = data.findAll('tr')[row].findAll('td')[2].text
         self.record['eau_cont'] = data.findAll('tr')[row].findAll('td')[3].text
         self.record['sol_cont'] = data.findAll('tr')[row].findAll('td')[4].text
@@ -85,23 +92,23 @@ class BaseScraper(object):
                       self.record['lat'],
                       self.record['long'],
                       self.record['nom_dossier'],
-                      self.record['adress'], self.record['mrc'],
+                      self.record['adress'], 
+                      self.record['mrc'],
                       self.record['eau_cont'],
                       self.record['sol_cont'],
                       self.record['etat_rehab']]
-        return self.parsed_row
-        
+         
         
     def walk_region_table(self):
        print '%s records to process' % self.num_records
-       for record in range(3, self.num_records - 1, 2):
-           savefile = open('savefile.csv', 'a')
+       for record in range(3, self.num_records -1, 2):
+           savefile = open(self.filename, 'a')
            self.parse_region_table(record)
-           raw_row = ','.join(self.parsed_row) + '\n'
-           row = raw_row.encode('iso-8859-1').decode('ascii','ignore')
+           raw_row = ',	'.join(self.parsed_row) 
+           row = raw_row.encode('iso-8859-1')
            print type(row)
-           savefile.write(row)
-	   print "%s\n" % row
+           print row
+           savefile.write('%s\n' % row)
            print '%s of %s records processed' % (record, self.num_records) 
        savefile.close()
        print 'successfully processed %s records' % self.num_records
