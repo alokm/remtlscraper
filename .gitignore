@@ -1,5 +1,5 @@
 *.pyc
 *.swp
 venv/
-raw_data/
+data/
 
