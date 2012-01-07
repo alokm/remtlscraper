@@ -68,7 +68,9 @@ class BaseScraper(object):
 
         return self.region_page
 
-
+    # read data into outer loop once 
+    # parse row into variable in outer loop prior to passing it to the scraper
+    # save data.findAll as a variable once per parses row 
     def parse_region_table(self, row=3):
         docsoup = soup(self.region_page)
         table = docsoup.body.findAll('table')
