@@ -66,49 +66,56 @@ class BaseScraper(object):
         page = response.read()
         self.region_page = page.decode('iso-8859-1')
 
-        return self.region_page
 
     # read data into outer loop once 
     # parse row into variable in outer loop prior to passing it to the scraper
     # save data.findAll as a variable once per parses row 
-    def parse_region_table(self, row=3):
+    def parse_table(self):
         docsoup = soup(self.region_page)
         table = docsoup.body.findAll('table')
         data = table[4]
-        raw_coords = data.findAll('tr')[row+1].findAll('td')[1].text
-        coords = raw_coords.replace(',','.').replace('&nbsp;','')
-        
+        self.tr_data = data.findAll('tr')
+        self.num_records = len(self.tr_data)
+
+
+    def parse_row(self, row):
+	tr = self.tr_data
         self.record = dict()
-        self.num_records = len(data.findAll('tr'))
-        self.record['num_fiche'] = data.findAll('tr')[row+1].findAll('td')[0].text
+        
+        first = tr[row]
+        second = tr[row+1]
+	
+	raw_coords = second.findAll('td')[1].text
+        coords = raw_coords.replace(',','.').replace('&nbsp;','')
+
+	self.record['num_fiche'] = second.findAll('td')[0].text
         self.record['lat'] = coords[:coords.find('-')]
         self.record['long'] = coords[coords.find('-'):]      
-        self.record['nom_dossier'] = data.findAll('tr')[row].findAll('td')[0].text
-        raw_adress = data.findAll('tr')[row].findAll('td')[1].text
+        self.record['nom_dossier'] = first.findAll('td')[0].text
+        raw_adress = first.findAll('td')[1].text
         self.record['adress'] = raw_adress.replace(',',' ').replace('&nbsp;',' ')
-        self.record['mrc'] = data.findAll('tr')[row].findAll('td')[2].text
-        self.record['eau_cont'] = data.findAll('tr')[row].findAll('td')[3].text
-        self.record['sol_cont'] = data.findAll('tr')[row].findAll('td')[4].text
-        self.record['etat_rehab'] = data.findAll('tr')[row].findAll('td')[5].text
+        self.record['mrc'] = first.findAll('td')[2].text
+        self.record['eau_cont'] = first.findAll('td')[3].text
+        self.record['sol_cont'] = first.findAll('td')[4].text
+        self.record['etat_rehab'] = first.findAll('td')[5].text
         self.parsed_row = [self.record['num_fiche'],
-                      self.record['lat'],
-                      self.record['long'],
-                      self.record['nom_dossier'],
-                      self.record['adress'], 
-                      self.record['mrc'],
-                      self.record['eau_cont'],
-                      self.record['sol_cont'],
-                      self.record['etat_rehab']]
-         
+                           self.record['lat'],
+                           self.record['long'],
+                           self.record['nom_dossier'],
+                           self.record['adress'], 
+                           self.record['mrc'],
+                           self.record['eau_cont'],
+                           self.record['sol_cont'],
+                           self.record['etat_rehab']]
+
         
-    def walk_region_table(self):
+    def walk_table(self): 
        print '%s records to process' % self.num_records
+       savefile = open(self.filename, 'a')
        for record in range(3, self.num_records -1, 2):
-           savefile = open(self.filename, 'a')
-           self.parse_region_table(record)
+           self.parse_row(record)
            raw_row = ',	'.join(self.parsed_row) 
            row = raw_row.encode('iso-8859-1')
-           print type(row)
            print row
            savefile.write('%s\n' % row)
            print '%s of %s records processed' % (record, self.num_records) 
