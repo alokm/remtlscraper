@@ -7,17 +7,15 @@ import lib
 def scraper(inputs):
     scraper = lib.BaseScraper()
     if inputs.listflag == True:
-        print 'list of region codes:'
         scraper.list() 
     elif inputs.region_code is not None:
-        print 'user specified the following region codes:'
-        print inputs.region_code
+        print 'Retrieving all data for - %s' % \
+			scraper.region_codes[inputs.region_code]
         print '-' * 20
-        print 'pass lib.py the following codes' 
         scraper.get_region(inputs.region_code)
-	scraper.parse_region_table(3)
-        scraper.walk_region_table()
-        print 'success!' 
+	scraper.parse_table()
+        scraper.walk_table()
+        print 'Success! Completed Data extraction' 
     else:
         print """To retrieve data for a region enter the following from the command line to retrieve data for region 06 = Montreal
 
