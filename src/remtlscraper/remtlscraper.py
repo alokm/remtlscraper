@@ -24,7 +24,7 @@ $ python remtlscraper.py -g 06
 
 parser = argparse.ArgumentParser()
 
-title="Command line utility for downloading pdf docs on contamination data"
+title="Command line utility for extracting contamination data from public websites for remtl.ca"
 
 parser = argparse.ArgumentParser(description=title)
 parser.add_argument('-g', action='store', metavar='Region',
