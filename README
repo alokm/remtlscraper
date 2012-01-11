@@ -13,8 +13,8 @@ Basic Usage:
 
 
 from a command line enter the following
-> python remtlscraper.py -l  # list available MRC codes 
-> python remtlscraper.py -h  # to display basic help 
-> python remtlscraper.py 01 02 03 # to retrieve all documents by code
+> python remtlscraper.py -l    # list available region codes 
+> python remtlscraper.py -h    # to display basic help 
+> python remtlscraper.py -g 06 # to retrieve all data for a specified region code
 
  
