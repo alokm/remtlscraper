@@ -1,4 +1,4 @@
-A command line utility for downloading and managing public pdf documents available from Ville de Montreal websites. 
+A command line utility for downloading data from public sources available from http://www.mddep.gouv.qc.ca/sol/terrains/terrains-contamines/recherche.asp 
 
 The primary focus of this tool is to mine online public websites for information on land, water, and air contamination in the Montreal region. This is part of the open data project.
 
