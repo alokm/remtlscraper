@@ -94,9 +94,8 @@ class BaseScraper(object):
 	    raw_out = lstring + clean_mstring + rstring
 	    clean = raw_out.replace('&nbsp;','')
         else:
-	    clean = term.replace('&nbsp;','').replace('*','')
-        return clean
-        
+	    clean = line.replace('&nbsp;','')
+	return clean.replace('\r \n', ' ')
 
     def parse_field(self, field):
         if field.find(','):
@@ -118,7 +117,7 @@ class BaseScraper(object):
         raw_coords = second.findAll('td')[1].text
         coords = raw_coords.replace(',','.').replace('&nbsp;','')
         raw_adress = first.findAll('td')[1].text.replace('&nbsp;','')
-	clean_adress = raw_adress.replace('^M','')
+	clean_adress = raw_adress.replace('\r \n', ' ')
 
 	eau = first.findAll('td')[3].text
 	cleaned_eau = self.clean_field(eau)
@@ -159,7 +158,7 @@ class BaseScraper(object):
        print '%s records to process' % self.num_records
        filename = 'output/' + self.filename
        savefile = open(filename, 'a')
-       for record in range(3, self.num_records -1, 2):
+       for record in range(3, 33, 2):
            raw_row = self.parse_row(record)
 	   clean_row = ', '.join(self.parsed_row)
            row = clean_row.encode('iso-8859-1')
