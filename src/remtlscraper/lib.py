@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-import redis
+
 import urllib, urllib2
 from BeautifulSoup import BeautifulSoup as soup
 from StringIO import StringIO
@@ -43,13 +43,6 @@ class BaseScraper(object):
         for region_code, region in sorted(self.region_codes.iteritems()):
             print region_code, region
 
-    """ 
-    def test_doc(self):
-	r = redis.Redis('localhost')
-	doc = r.get('page')
-	self.filename = 'output/testmontreal.html'
-	self.region_page = unicode(doc, 'utf-8')
-    """
 
     def get_region(self, region_code):
         help = 'get specified region code XX as two-digit string for scraper'
