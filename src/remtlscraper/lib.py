@@ -151,7 +151,7 @@ class BaseScraper(object):
        print '%s records to process' % self.num_records
        filename = 'output/' + self.filename
        savefile = open(filename, 'a')
-       for record in range(3, 33, 2):
+       for record in range(3, self.num_records - 1, 2):  #data starts at row 3, increment by 2 rows, ends at 2nd last row 
            raw_row = self.parse_row(record)
 	   clean_row = ', '.join(self.parsed_row)
            row = clean_row.encode('iso-8859-1')
